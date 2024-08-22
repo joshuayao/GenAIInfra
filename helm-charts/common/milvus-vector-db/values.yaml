@@ -1,0 +1,29 @@
+replicaCount: 1
+image: milvusdb/milvus:v2.4.6
+
+service:
+  type: ClusterIP
+  grpcPort: 19530
+  apiPort: 9091
+
+etcd:
+  name: milvus-etcd
+  replicaCount: 1
+  image: "quay.io/coreos/etcd:v3.5.5"
+
+  service:
+    type: ClusterIP
+    port: 2399
+    peerPort: 2398
+
+minio:
+  name: milvus-minio
+  replicaCount: 1
+  image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+  accessKey: minioadmin
+  secretKey: minioadmin
+
+  service:
+    type: ClusterIP
+    port: 9000
+    consolePort: 9001
