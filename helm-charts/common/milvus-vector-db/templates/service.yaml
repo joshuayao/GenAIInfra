@@ -17,6 +17,7 @@ spec:
   selector:
     app.kubernetes.io/name: {{ .Values.etcd.name }}
     app.kubernetes.io/instance: {{ .Values.etcd.name }}
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
@@ -39,6 +40,7 @@ spec:
   selector:
     app.kubernetes.io/name: {{ .Values.minio.name }}
     app.kubernetes.io/instance: {{ .Values.minio.name }}
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
@@ -56,3 +58,4 @@ spec:
       targetPort: {{ .Values.service.apiPort }}
   selector:
     {{- include "milvus-vector-db.selectorLabels" . | nindent 4 }}
+  type: ClusterIP

@@ -40,6 +40,9 @@ spec:
             - name: ETCD_SNAPSHOT_COUNT
               value: "50000"
           image: quay.io/coreos/etcd:v3.5.5
+          volumeMounts:
+            - mountPath: /etcd
+              name: etcd-volume
           livenessProbe:
             exec:
               command:
@@ -54,6 +57,9 @@ spec:
           ports:
             - containerPort: {{ .Values.etcd.service.port }}
               protocol: TCP
+      volumes:
+        - name: etcd-volume
+          emptyDir: {}
       restartPolicy: Always
 
 ---
@@ -92,6 +98,9 @@ spec:
             - name: MINIO_SECRET_KEY
               value: {{ .Values.minio.secretKey }}
           image: {{ .Values.minio.image }}
+          volumeMounts:
+            - mountPath: /minio_data
+              name: minio-volume
           livenessProbe:
             exec:
               command:
@@ -107,6 +116,9 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.minio.service.port }}
               protocol: TCP
+      volumes:
+        - name: minio-volume
+          emptyDir: {}
       restartPolicy: Always
 ---
 apiVersion: apps/v1
@@ -136,6 +148,9 @@ spec:
             - name: MINIO_ADDRESS
               value: {{ .Values.minio.name }}:{{ .Values.minio.service.port }}
           image: {{ .Values.image }}
+          volumeMounts:
+            - mountPath: /var/lib/milvus
+              name: milvus-volume
           livenessProbe:
             exec:
               command:
@@ -152,4 +167,7 @@ spec:
               protocol: TCP
             - containerPort: {{ .Values.service.apiPort }}
               protocol: TCP
+      volumes:
+        - name: milvus-volume
+          emptyDir: {}
       restartPolicy: Always
